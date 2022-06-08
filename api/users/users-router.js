@@ -41,9 +41,16 @@ router.put('/:id', validateUserId, validatePost, (req, res, next) => {
   .catch(next)
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validateUserId, (req, res, next) => {
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
+  usersModel.remove(req.params.id)
+  .then(deleteCount => {
+    return deleteCount ? res.json(req.user) : next({
+      status: 503, message: 'Service Unavailable'
+    });
+  })
+  .catch(next);
 });
 
 router.get('/:id/posts', (req, res) => {
