@@ -31,12 +31,22 @@ function validateUser(req, res, next) {
 }
 
 function validatePost(req, res, next) {
-  // DO YOUR MAGIC
+  let { name } = req.body;
+  if (!req.body.name || typeof name !== 'string' || name.trim() === '') {
+    next({ status: 400, message: "missing required name" });
+    return;
+  }
+  req.body = {
+     name: name.trim(),
+     id: req.params.id 
+  };
+  next();
 }
 
 // do not forget to expose these functions to other modules
 module.exports = {
   logger,
   validateUserId,
-  validateUser
+  validateUser,
+  validatePost
 }
