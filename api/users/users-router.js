@@ -2,10 +2,10 @@ const express = require('express');
 
 // You will need `users-model.js` and `posts-model.js` both
 const usersModel = require('./users-model');
-//const postsModel = require('../posts/posts-model');
+const postsModel = require('../posts/posts-model');
 
 // The middleware functions also need to be required
-const { validateUserId, validateUser, validatePost } = require('../middleware/middleware')
+const { validateUserId, validateUser, validatePost, validateUserPost } = require('../middleware/middleware')
 
 const router = express.Router();
 
@@ -61,10 +61,13 @@ router.get('/:id/posts', validateUserId, (req, res, next) => {
   .catch(next);
 });
 
-router.post('/:id/posts', (req, res) => {
+router.post('/:id/posts', validateUserId, validateUserPost, (req, res, next) => {
   // RETURN THE NEWLY CREATED USER POST
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
+  postsModel.insert(req.body)
+  .then(newUserPost => res.json(newUserPost))
+  .catch(next)
 });
 
 module.exports = router;

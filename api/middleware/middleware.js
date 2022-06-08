@@ -43,10 +43,24 @@ function validatePost(req, res, next) {
   next();
 }
 
+function validateUserPost(req, res, next) {
+  let { text } = req.body;
+  if (!req.body.text || typeof text !== 'string' || text.trim() === '') {
+    next({ status: 400, message: "missing required text" });
+    return;
+  }
+  req.body = {
+     text: text.trim(),
+     user_id: req.params.id 
+  };
+  next();
+}
+
 // do not forget to expose these functions to other modules
 module.exports = {
   logger,
   validateUserId,
   validateUser,
-  validatePost
+  validatePost,
+  validateUserPost
 }
