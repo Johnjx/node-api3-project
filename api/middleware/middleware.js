@@ -11,13 +11,13 @@ function validateUserId(req, res, next) {
   usersModel.getById(req.params.id)
   .then(userObject => {
     if (userObject == null) {
-      res.status(404).json({message: "user not found"});
+      next({ status: 404, message: 'user not found'});
       return;
     }
     req.user = userObject;
     next();
   })
-  .catch(err => console.log(err))
+  .catch(next)
 }
 
 function validateUser(req, res, next) {

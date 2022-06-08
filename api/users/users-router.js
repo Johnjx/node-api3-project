@@ -9,19 +9,13 @@ const { validateUserId } = require('../middleware/middleware')
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
   // RETURN AN ARRAY WITH ALL THE USERS
   usersModel.get()
   .then(arr => {
     res.json(arr);
   })
-  .catch(err => {
-    res.status(500).json({
-        message: "The posts information could not be retrieved",
-        err: err.message,
-        stack: err.stack
-    })
-})
+  .catch(next)
 });
 
 router.get('/:id', validateUserId, (req, res) => {
